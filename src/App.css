@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+.board{
+  height: 100vh;
+  background-color: #EFEFEF !important;
+}
+
+.label{
+  font-size: 4em;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.btn{
+  width: 4em;
+  height: 4em;
+  font-size: 2em !important;
+}
+
+.game{
+  margin-top: 5.5rem;
+}
