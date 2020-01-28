@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
+body{
+  background-color: black !important;
+}
+
 .board{
   height: 100vh;
-  background-color: #EFEFEF !important;
 }
 
 .label{
