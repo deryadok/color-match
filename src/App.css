@@ -22,3 +22,23 @@ body{
 .game{
   margin-top: 5.5rem;
 }
+
+.info{
+  color: white;
+}
+
+.point{
+  color: gold;
+  font-size: 3em;
+}
+
+.timer{
+  color:sandybrown;
+  font-size: 3em;
+}
+
+.endGame{
+  font-size: 5em;
+  font-family: 'Montserrat', sans-serif !important;
+  color: white;
+}
