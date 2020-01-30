@@ -11,7 +11,7 @@ function App() {
   );
 }
 
-const colors = ['red','blue','green','yellow','white','pink','purple','azure'];
+const colors = ['red', 'blue', 'green', 'yellow', 'white', 'pink', 'purple', 'brown', 'coral', 'chocolate', 'cyan', 'gray', 'magenta', 'olive', 'orange'];
 
 const Button = (props) => {
 
@@ -34,10 +34,9 @@ const Label = (props) => {
 }
 
 const useGameState = () => {
-
   const [topColor, setTopColor] = useState(colors[utils.random(0,colors.length - 1)]);
   const [bottomColor, setBottomColor] = useState(colors[utils.random(0,colors.length - 1)]);
-  const [randomColor, setRandomColor] = useState(colors[utils.random(0,colors.length-1)]);
+  const [randomColor, setRandomColor] = useState(utils.arr(topColor, bottomColor));
   const [point, setPoint] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(10);
 
@@ -52,15 +51,15 @@ const useGameState = () => {
 
   const onButtonClick = (message) => {
     if(message === 'YES' && topColor === randomColor){
-      setPoint(point + 1);
+      setPoint(point + 10);
       setSecondsLeft(secondsLeft + 1);
     }
     else if(message === 'NO' && topColor !== randomColor){
-      setPoint(point + 1);
+      setPoint(point + 10);
       setSecondsLeft(secondsLeft + 1);
     }
     else{
-      point > 0 ? setPoint(point - 1) : setPoint(0);
+      point > 0 ? setPoint(point - 10) : setPoint(0);
       setSecondsLeft(secondsLeft - 2);
     }
     
@@ -69,14 +68,22 @@ const useGameState = () => {
     setRandomColor(colors[utils.random(0,colors.length - 1)]);
   }
 
-  return {topColor, bottomColor, randomColor, point, secondsLeft, onButtonClick};
+  const setGameState = () => {
+    setTopColor(colors[utils.random(0,colors.length - 1)]);
+    setBottomColor(colors[utils.random(0,colors.length - 1)]);
+    setRandomColor(colors[utils.random(0,colors.length - 1)]);
+    setPoint(0);
+    setSecondsLeft(10);
+  }
+
+  return {topColor, bottomColor, randomColor, point, secondsLeft, onButtonClick, setGameState};
 }
 
 const PlayAgain = (props) => {
   return(
-    <div className="col-md-12 board"> 
-      <p className="text-center endGame">Puanınız: {props.point}</p>
-      <button onClick={props.startNewGame} className="btn btn-outline-warning text-center">TEKRAR OYNA</button>,
+    <div className="col-md-12 board text-center">
+      <p className="endGame">Puanınız: {props.point}</p>
+      <button onClick={props.onClick} className="btn btn-outline-warning replay">TEKRAR OYNA</button>
     </div>
   );
 }
@@ -100,23 +107,23 @@ const GameDisplay = (props) => {
 }
 
 const Game = (props) => {
-
   const {
     topColor,
     bottomColor,
     randomColor,
     point,
     secondsLeft,
-    onButtonClick
+    onButtonClick,
+    setGameState
   } = useGameState();
 
-  const gameStatus = secondsLeft === 0 ? true : false;
+  const gameStatus = secondsLeft <= 0 ? true : false;    
 
   return(
     <div className="container-fluid">
       <div className="row">
-        {gameStatus ? <PlayAgain startNewGame={props.startNewGame} point={point}></PlayAgain> : 
-          <GameDisplay point={point} secondsLeft={secondsLeft} topColor={topColor} bottomColor={bottomColor} randomColor={randomColor} onButtonClick={onButtonClick}></GameDisplay>}
+        {gameStatus ? (<PlayAgain onClick={()=> props.startNewGame(setGameState())} point={point}></PlayAgain>) : 
+          (<GameDisplay point={point} secondsLeft={secondsLeft} topColor={topColor} bottomColor={bottomColor} randomColor={randomColor} onButtonClick={onButtonClick}></GameDisplay>)}
       </div>
     </div>
   );
@@ -124,12 +131,14 @@ const Game = (props) => {
 
 const ColorMatch = () => {
   const [gameId, setGameId] = useState(1);
-  return <Game keys={gameId} startNewGame={() => setGameId(gameId + 1)}></Game>
+  return <Game keys={gameId} startNewGame={() => { setGameId(gameId + 1);}}></Game>
 }
 
 const utils = {
   //pick a random number between min and max (edges included)
-  random: (min, max) => {var rnd = Math.floor(Math.random() * (max - min + 1)) + min; return rnd;}
+  random: (min, max) => {var rnd = Math.floor(Math.random() * (max - min + 1)) + min; return rnd;},
+  //an array that includes top and random color and return one of them
+  arr: (topColor, bottomColor) => { var arr = [topColor, bottomColor]; return arr[utils.random(0,1)]; }
 };
 
 export default App;
